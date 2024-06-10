@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+    mongodb:
+        container_name: mongodb
+        image: mongo
+        restart: unless-stopped
+        ports:
+            - '27017:27017'
+        env_file:
+            - ./.env
+        environment:
+            - MONGO_INITDB_DATABASE=$MONGO_INITDB_DATABASE
+            - MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+            - MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+        volumes:
+            - ./mongo-data:/data/db
+
+    web:
+        build:
+            context: .
+            dockerfile: packages/web/Dockerfile
+        ports:
+            - '3000:3000'
+        volumes:
+          - ./packages/web:/usr/src/app
+          - /usr/src/app/node_modules
+        command: npm start
+        depends_on:
+            - api
+
+    api:
+        container_name: api
+        build:
+            context: .
+            dockerfile: packages/api/Dockerfile
+        ports:
+            - '8080:8080'
+        env_file:
+            - ./.env
+        environment:
+            - MONGO_URI=$MONGO_URI
+            - MONGO_INITDB_DATABASE=$MONGO_INITDB_DATABASE
+            - MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+            - MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+            - JWT_SECRET=$JWT_SECRET
+        depends_on:
+            - mongodb
+        volumes:
+            - ./packages/api:/usr/src/app
+            - /usr/src/app/node_modules
+        command: npm run start:dev
+
+volumes:
+    mongo-data:
+        driver: local

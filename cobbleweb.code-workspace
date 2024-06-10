@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "path": "./",
+            "name": "project-root"
+        },
+        {
+            "path": "./packages/api",
+            "name": "api"
+        },
+        {
+            "path": "./packages/web",
+            "name": "web"
+        }
+    ]
+}

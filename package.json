@@ -1,0 +1,20 @@
+{
+    "name": "easygenerator",
+    "version": "1.0.0",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "start:all": "concurrently \"npm run backend\" \"npm run frontend\"",
+        "start:api": "npm run dev -w packages/api",
+        "start:web": "npm start -w packages/web",
+        "docker:build": "docker-compose build",
+        "docker:up": "docker-compose up",
+        "docker:down": "docker-compose down"
+    },
+    "author": "Mahmoud Abdulazim <aze3ma@gmail.com> (http://github.com/aze3ma)",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
